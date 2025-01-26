@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 344 85% 43%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: var(--primary-100), 0.2;
+    --sidebar-accent-foreground: var(--primary-100);
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+/* ========= !universal css ========= */
+
+body {
+  scroll-behavior: smooth;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+::selection {
+  background-color: hsl(var(--primary-100));
+  color: #fff;
+}
+
+/* ========= !universal css ========= */
+
+/* ========= custom scrollbar ========= */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d8d8d8;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: none;
+  background: #f1f1f1;
+}
+
+/* ========= !custom scrollbar ========= */
+  

@@ -2,28 +2,19 @@
 
 import * as React from "react"
 import {
-  BanknoteIcon,
   BookOpenCheck,
   Boxes,
   ChartBar,
-  FilePlus,
   Flag,
   LayoutDashboard,
   Navigation,
-  PlusCircle,
   RectangleEllipsis,
-  Settings,
-  SettingsIcon,
-  ShieldCheck,
-  ShoppingCart,
   TestTube,
-  ThumbsUp,
   User,
   UserRoundCog,
 } from "lucide-react"
 
 import { NavMain } from "@/components/ui/global/NavMain"
-import { NavProjects } from "@/components/ui/global/NavProjects"
 import { BrandSwitcher } from "@/components/ui/global/BrandSwitcher"
 import {
   Sidebar,
@@ -166,7 +157,7 @@ const data = {
     // {
     //   title: "Warranties Setup",
     //   url: "/warranties-setup",
-    //   icon: SettingsIcon,
+    //   icon: SettingsIcon,`
     // },
   ],
 }

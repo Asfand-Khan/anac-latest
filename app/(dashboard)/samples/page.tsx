@@ -6,14 +6,29 @@ import { DataTable } from '@/components/data-table/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import React, { useEffect } from 'react'
-import { Metadata } from 'next';
 import SubNav from '@/components/ui/global/SubNav'
 import { Button } from '@/components/ui/button'
 
-const page = () => {
+type SampleData = {
+    id: string;
+    reference: string;
+    email: string;
+    phone: string;
+    address: string;
+    department: string;
+    position: string;
+    salary: number;
+    hireDate: string;
+    performance: number;
+    projects: number;
+    status: string;
+    location: string;
+  };
+
+const Page = () => {
     const router = useRouter();
-    const [data,setData] = React.useState<any>([]);
-    const getData = () => {
+    const [data,setData] = React.useState<SampleData[]>([]);
+    const getData = (): SampleData[] => {
         return [
             {
                 id: "728ed52f",
@@ -87,4 +102,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

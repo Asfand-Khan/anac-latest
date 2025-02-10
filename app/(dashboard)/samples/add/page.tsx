@@ -13,7 +13,7 @@ const page = () => {
         <>
             <Card className="w-full shadow-none border-0">
                 <CardHeader className="border-b py-4">
-                    <CardTitle className="tracking-tight text-lg font-semibold">Create Policy</CardTitle>
+                    <CardTitle className="tracking-tight text-lg font-semibold">Create Sample</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <CreatePolicy />

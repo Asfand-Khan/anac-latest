@@ -3,14 +3,12 @@
 import * as React from "react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import {
   ChevronsUpDown,
-  CreditCard,
-  DollarSign,
-  FileText,
-  File,
   Check,
+  CalendarIcon,
 } from "lucide-react";
 import {
   Command,
@@ -26,65 +24,101 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-const vehicles = [
-  { make: "SUZUKI", models: ["BALENO", "SWIFT", "VITARA"] },
-  { make: "TOYOTA", models: ["COROLLA", "CAMRY", "RAV4"] },
-  { make: "HONDA", models: ["CIVIC", "ACCORD", "CR-V"] },
-];
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Calendar } from "../ui/calendar";
 
 const products = [
-  "Private Car Comprehensive Insurance - Suzuki",
-  "Private Car Third Party Insurance - Suzuki",
-  "Commercial Vehicle Insurance - Suzuki",
+  "FEROZE 1881 MILLS-H-21 UNIT(WIDD)",
+  "FEROZE 1882 MILLS-H-22 UNIT(OTHERS)",
+  "FEROZE 1883 MILLS-H-23 UNIT(WIDD)",
 ];
 
-const paymentOptions = [
-  {
-    id: "credit-card",
-    icon: <CreditCard className="w-6 h-6 text-blue-500" />,
-    title: "Credit Card",
-    description: "You will be redirected to Credit/Debit Card Payment Page.",
-  },
-  {
-    id: "cash-on-delivery",
-    icon: <DollarSign className="w-6 h-6 text-green-500" />,
-    title: "Cash On Delivery",
-    description:
-      "Additional cash to be paid by the client to Courier Partner separately for Cash on Delivery orders.",
-  },
-  {
-    id: "cheque-on-order",
-    icon: <FileText className="w-6 h-6 text-gray-500" />,
-    title: "Cheque On Order",
-    description: "",
-  },
-  {
-    id: "cheque-on-delivery",
-    icon: <File className="w-6 h-6 text-yellow-500" />,
-    title: "Cheque On Delivery",
-    description:
-      "Additional cash to be paid by the client to Courier Partner separately for Cheque on Delivery orders.",
-  },
-];
+const machineKinds = ["Industrial Machine", "Commercial Machine"];
+const machineMakes = ["CATERPILLAR"];
+const machineTypes = ["3516", "3517", "3518", "3519"];
+const analysisTypes = ["Gas", "Fuel", "Diesel"];
+const partKinds = ["Engine on natural gas"];
+const partMakes = ["Caterpillar"];
+const partTypes = ["Demo 01", "Demo 02"];
+const mileageUnits = ["Hours", "Minutes", "Days", "Months", "Years"];
+const topUpUnits = ["L"];
+const oilNames = ["Total Nateria MWX 40", "Total Nateria MWX 50"];
+
+// const paymentOptions = [
+//   {
+//     id: "credit-card",
+//     icon: <CreditCard className="w-6 h-6 text-blue-500" />,
+//     title: "Credit Card",
+//     description: "You will be redirected to Credit/Debit Card Payment Page.",
+//   },
+//   {
+//     id: "cash-on-delivery",
+//     icon: <DollarSign className="w-6 h-6 text-green-500" />,
+//     title: "Cash On Delivery",
+//     description:
+//       "Additional cash to be paid by the client to Courier Partner separately for Cash on Delivery orders.",
+//   },
+//   {
+//     id: "cheque-on-order",
+//     icon: <FileText className="w-6 h-6 text-gray-500" />,
+//     title: "Cheque On Order",
+//     description: "",
+//   },
+//   {
+//     id: "cheque-on-delivery",
+//     icon: <File className="w-6 h-6 text-yellow-500" />,
+//     title: "Cheque On Delivery",
+//     description:
+//       "Additional cash to be paid by the client to Courier Partner separately for Cheque on Delivery orders.",
+//   },
+// ];
 
 const CreatePolicy = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [vehicleMakeOpen, setVehicleMakeOpen] = useState(false);
   const [formData, setFormData] = useState({
     product: "",
-    vehicleMake: "",
-    vehicleModel: "",
-    insuranceValue: "",
-    premiumRate: "",
+    machineKind: "",
+    machineMake: "",
+    machineType: "",
+    machineInfo1: "",
+    machineInfo2: "",
+    machineId: "",
+    analysisType: "",
+    partKind: "",
+    partMake: "",
+    partType: "",
+    partInfo: "",
+    partId: "",
+    barcodeNo: "",
+    sampleDate: "" as unknown as Date,
+    capacity: "",
+    totalMileage: 0,
+    mileageUnit: "Hours",
+    oilTime: undefined as number | undefined,
+    topUp: undefined as number | undefined,
+    topUpUnit: "",
+    oilName: "",
+    oilMake: "",
+    oilType: "",
+    oilGrade: undefined as number | undefined
   });
   const [open, setOpen] = React.useState(false);
+  const [machineKindOpen, setMachineKindOpen] = React.useState(false);
+  const [machineMakeOpen, setMachineMakeOpen] = React.useState(false);
+  const [machineTypeOpen, setMachineTypeOpen] = React.useState(false);
+  const [analysisTypeOpen, setAnalysisTypeOpen] = React.useState(false);
+  const [partKindOpen, setPartKindOpen] = React.useState(false);
+  const [partMakeOpen, setPartMakeOpen] = React.useState(false);
+  const [partTypeOpen, setPartTypeOpen] = React.useState(false);
+  const [mileageUnitOpen, setMileageUnitOpen] = React.useState(false);
+  const [topUpUnitOpen, setTopUpUnitOpen] = React.useState(false);
+  const [oilNameOpen, setOilNameOpen] = React.useState(false);
 
   const steps = [
-    { number: 1, title: "Machine Creation" },
-    { number: 2, title: "Part" },
-    { number: 3, title: "Sample" },
-    { number: 4, title: "Confirmation" },
+    { number: 1, description: "Machine Creation", title: "Machine" },
+    { number: 2, description: "Part Creation", title: "Part" },
+    { number: 3, description: "Sample Creation", title: "Sample" },
+    { number: 4, description: "Confirmation", title: "Confirmation" },
   ];
 
   const handleNext = () => {
@@ -101,7 +135,7 @@ const CreatePolicy = () => {
 
   return (
     <>
-      <div className="pt-6 grid lg:grid-cols-2 grid-cols-1 gap-6 mx-auto">
+      <div className="pt-6 gap-6 mx-auto lg:w-8/12 w-full">
         <div className="w-full space-y-6">
           {/* Stepper */}
           <div className="flex items-center relative">
@@ -118,6 +152,15 @@ const CreatePolicy = () => {
                   >
                     {step.number}
                   </div>
+                  <span
+                    className={cn(
+                      currentStep >= step.number
+                        ? "text-primary-100"
+                        : "text-gray-500"
+                    )}
+                  >
+                    {step.title}
+                  </span>
                 </div>
                 {index < steps.length - 1 && (
                   <div
@@ -136,7 +179,7 @@ const CreatePolicy = () => {
           {currentStep === 1 && (
             <div className="space-y-4">
               <h1 className="text-lg text-primary-100 font-semibold underline">
-                {steps[0]?.title}
+                {steps[0]?.description}
               </h1>
 
               <div className="space-y-6">
@@ -163,10 +206,10 @@ const CreatePolicy = () => {
                         <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
                           <Command>
                             <CommandInput
-                              placeholder="Search products..."
+                              placeholder="Search customers..."
                               className="h-11"
                             />
-                            <CommandEmpty>No product found.</CommandEmpty>
+                            <CommandEmpty>No customers found.</CommandEmpty>
                             <CommandGroup>
                               {products.map((product) => (
                                 <CommandItem
@@ -194,48 +237,49 @@ const CreatePolicy = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="vehicleMake">
+                      <Label htmlFor="product">
                         Machine Kind <span className="text-red-500">*</span>
                       </Label>
                       <Popover
-                        open={vehicleMakeOpen}
-                        onOpenChange={setVehicleMakeOpen}
+                        open={machineKindOpen}
+                        onOpenChange={setMachineKindOpen}
                       >
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
                             size="lg"
                             role="combobox"
+                            aria-expanded={machineKindOpen}
                             className="w-full justify-between px-3 capitalize hover:bg-transparent"
                           >
-                            {formData.vehicleMake || "Select Kind..."}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            {formData.machineKind || "Select machine kind..."}
+                            <ChevronsUpDown className="opacity-50" />
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
                           <Command>
                             <CommandInput
-                              placeholder="Search makes..."
+                              placeholder="Search machine kind..."
                               className="h-11"
                             />
-                            <CommandEmpty>No make found.</CommandEmpty>
+                            <CommandEmpty>No machine kind found.</CommandEmpty>
                             <CommandGroup>
-                              {vehicles.map((vehicle) => (
+                              {machineKinds.map((kind) => (
                                 <CommandItem
-                                  key={vehicle.make}
+                                  key={kind}
                                   onSelect={() => {
                                     setFormData({
                                       ...formData,
-                                      vehicleMake: vehicle.make,
+                                      machineKind: kind,
                                     });
-                                    setVehicleMakeOpen(false); // Close popover on select
+                                    setOpen(false);
                                   }}
                                 >
-                                  {vehicle.make}
+                                  {kind}
                                   <Check
                                     className={cn(
                                       "ml-auto",
-                                      formData.vehicleMake === vehicle.make
+                                      formData.machineKind === kind
                                         ? "opacity-100"
                                         : "opacity-0"
                                     )}
@@ -248,62 +292,210 @@ const CreatePolicy = () => {
                       </Popover>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="vehicleMake">
-                        Machine Make <span className="text-red-500">*</span>
-                      </Label>
-                      <Popover
-                        open={vehicleMakeOpen}
-                        onOpenChange={setVehicleMakeOpen}
-                      >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="lg"
-                            role="combobox"
-                            className="w-full justify-between px-3 capitalize hover:bg-transparent"
-                          >
-                            {formData.vehicleMake || "Select Make..."}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
-                          <Command>
-                            <CommandInput
-                              placeholder="Search makes..."
-                              className="h-11"
-                            />
-                            <CommandEmpty>No make found.</CommandEmpty>
-                            <CommandGroup>
-                              {vehicles.map((vehicle) => (
-                                <CommandItem
-                                  key={vehicle.make}
-                                  onSelect={() => {
-                                    setFormData({
-                                      ...formData,
-                                      vehicleMake: vehicle.make,
-                                    });
-                                    setVehicleMakeOpen(false); // Close popover on select
-                                  }}
-                                >
-                                  {vehicle.make}
-                                  <Check
-                                    className={cn(
-                                      "ml-auto",
-                                      formData.vehicleMake === vehicle.make
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="machinemake">
+                          Machine Make <span className="text-red-500">*</span>
+                        </Label>
+                        <Popover
+                          open={machineMakeOpen}
+                          onOpenChange={setMachineMakeOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              role="combobox"
+                              aria-expanded={machineMakeOpen}
+                              className="w-full justify-between px-3 capitalize hover:bg-transparent"
+                            >
+                              {formData.machineMake || "Select machine make..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search machine make..."
+                                className="h-11"
+                              />
+                              <CommandEmpty>
+                                No machine make found.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {machineMakes.map((make) => (
+                                  <CommandItem
+                                    key={make}
+                                    onSelect={() => {
+                                      setFormData({
+                                        ...formData,
+                                        machineMake: make,
+                                      });
+                                      setMachineMakeOpen(false);
+                                    }}
+                                  >
+                                    {make}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        formData.machineMake === make
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="machinemake">Other Machine Make</Label>
+                        <Input
+                          id="machinemake"
+                          type="text"
+                          placeholder="Other Machine Make"
+                          value={formData.machineMake}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              machineMake: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="machinetype">
+                          Machine Type <span className="text-red-500">*</span>
+                        </Label>
+                        <Popover
+                          open={machineTypeOpen}
+                          onOpenChange={setMachineTypeOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              role="combobox"
+                              aria-expanded={machineTypeOpen}
+                              className="w-full justify-between px-3 capitalize hover:bg-transparent"
+                            >
+                              {formData.machineType || "Select machine type..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search machine type..."
+                                className="h-11"
+                              />
+                              <CommandEmpty>
+                                No machine type found.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {machineTypes.map((type) => (
+                                  <CommandItem
+                                    key={type}
+                                    onSelect={() => {
+                                      setFormData({
+                                        ...formData,
+                                        machineType: type,
+                                      });
+                                      setMachineTypeOpen(false);
+                                    }}
+                                  >
+                                    {type}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        formData.machineType === type
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="machinetype">Other Machine Type</Label>
+                        <Input
+                          id="machinetype"
+                          type="text"
+                          placeholder="Other Machine Type"
+                          value={formData.machineType}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              machineType: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/3 space-y-2">
+                        <Label htmlFor="machineinfo1">Machine Info 01</Label>
+                        <Input
+                          id="machineinfo1"
+                          type="text"
+                          placeholder="Machine Info 01"
+                          value={formData.machineInfo1}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              machineInfo1: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="w-full lg:w-1/3 space-y-2">
+                        <Label htmlFor="machineinfo2">Machine Info 02</Label>
+                        <Input
+                          id="machineinfo2"
+                          type="text"
+                          placeholder="Machine Info 02"
+                          value={formData.machineInfo2}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              machineInfo2: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="w-full lg:w-1/3 space-y-2">
+                        <Label htmlFor="machineid">Machine ID</Label>
+                        <Input
+                          id="machineid"
+                          type="text"
+                          placeholder="Machine ID"
+                          value={formData.machineId}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              machineId: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    {/* <div className="space-y-2">
                       <Label htmlFor="insuranceValue">
                         Insurance Estimated Value{" "}
                         <span className="text-red-500">*</span>
@@ -321,37 +513,7 @@ const CreatePolicy = () => {
                         }
                         className="w-full"
                       />
-                      {formData.insuranceValue && (
-                        <p className="text-sm text-gray-600">
-                          {new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "PKR",
-                          }).format(Number(formData.insuranceValue))}{" "}
-                          only
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h1 className="text-base font-medium">
-                    Business Unit Information
-                  </h1>
-                  {/* Premium Rate */}
-                  <div className="space-y-2">
-                    <Label>Premium Rate</Label>
-                    <Input
-                      placeholder="Premium Rate"
-                      value={formData.premiumRate}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          premiumRate: e.target.value,
-                        })
-                      }
-                      className="w-full"
-                    />
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -361,51 +523,55 @@ const CreatePolicy = () => {
           {currentStep === 2 && (
             <div className="space-y-4">
               <h1 className="text-lg text-primary-100 font-semibold underline">
-                {steps[1]?.title}
+                {steps[1]?.description}
               </h1>
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h1 className="text-base font-medium">Product Information</h1>
                   <div className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="product">
-                        Product <span className="text-red-500">*</span>
+                      <Label htmlFor="Analysistype">
+                        Analysis Type <span className="text-red-500">*</span>
                       </Label>
-                      <Popover open={open} onOpenChange={setOpen}>
+                      <Popover
+                        open={analysisTypeOpen}
+                        onOpenChange={setAnalysisTypeOpen}
+                      >
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
                             size="lg"
                             role="combobox"
-                            aria-expanded={open}
+                            aria-expanded={analysisTypeOpen}
                             className="w-full justify-between px-3 capitalize hover:bg-transparent"
                           >
-                            {formData.product || "Select product..."}
+                            {formData.analysisType || "Select analysis type..."}
                             <ChevronsUpDown className="opacity-50" />
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
                           <Command>
                             <CommandInput
-                              placeholder="Search products..."
+                              placeholder="Search analysis type..."
                               className="h-11"
                             />
-                            <CommandEmpty>No product found.</CommandEmpty>
+                            <CommandEmpty>
+                              No analysis types found.
+                            </CommandEmpty>
                             <CommandGroup>
-                              {products.map((product) => (
+                              {analysisTypes.map((analysisType) => (
                                 <CommandItem
-                                  key={product}
+                                  key={analysisType}
                                   onSelect={() => {
-                                    setFormData({ ...formData, product });
-                                    setOpen(false);
+                                    setFormData({ ...formData, analysisType });
+                                    setAnalysisTypeOpen(false);
                                   }}
                                 >
-                                  {product}
+                                  {analysisType}
                                   <Check
                                     className={cn(
                                       "ml-auto",
-                                      formData.product === product
+                                      formData.analysisType === analysisType
                                         ? "opacity-100"
                                         : "opacity-0"
                                     )}
@@ -420,11 +586,11 @@ const CreatePolicy = () => {
 
                     <div className="space-y-2">
                       <Label htmlFor="vehicleMake">
-                        Vehicle Make <span className="text-red-500">*</span>
+                        Part Kind <span className="text-red-500">*</span>
                       </Label>
                       <Popover
-                        open={vehicleMakeOpen}
-                        onOpenChange={setVehicleMakeOpen}
+                        open={partKindOpen}
+                        onOpenChange={setPartKindOpen}
                       >
                         <PopoverTrigger asChild>
                           <Button
@@ -433,34 +599,34 @@ const CreatePolicy = () => {
                             role="combobox"
                             className="w-full justify-between px-3 capitalize hover:bg-transparent"
                           >
-                            {formData.vehicleMake || "Select make..."}
+                            {formData.partKind || "Select part kind..."}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
                           <Command>
                             <CommandInput
-                              placeholder="Search makes..."
+                              placeholder="Search part kinds..."
                               className="h-11"
                             />
-                            <CommandEmpty>No make found.</CommandEmpty>
+                            <CommandEmpty>No part kinds found.</CommandEmpty>
                             <CommandGroup>
-                              {vehicles.map((vehicle) => (
+                              {partKinds.map((partKind) => (
                                 <CommandItem
-                                  key={vehicle.make}
+                                  key={partKind}
                                   onSelect={() => {
                                     setFormData({
                                       ...formData,
-                                      vehicleMake: vehicle.make,
+                                      partKind,
                                     });
-                                    setVehicleMakeOpen(false); // Close popover on select
+                                    setPartKindOpen(false); // Close popover on select
                                   }}
                                 >
-                                  {vehicle.make}
+                                  {partKind}
                                   <Check
                                     className={cn(
                                       "ml-auto",
-                                      formData.vehicleMake === vehicle.make
+                                      formData.partKind === partKind
                                         ? "opacity-100"
                                         : "opacity-0"
                                     )}
@@ -473,33 +639,229 @@ const CreatePolicy = () => {
                       </Popover>
                     </div>
 
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="partmake">
+                          Part Make <span className="text-red-500">*</span>
+                        </Label>
+                        <Popover
+                          open={partMakeOpen}
+                          onOpenChange={setPartMakeOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              role="combobox"
+                              aria-expanded={partMakeOpen}
+                              className="w-full justify-between px-3 capitalize hover:bg-transparent"
+                            >
+                              {formData.partMake || "Select part make..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search part make..."
+                                className="h-11"
+                              />
+                              <CommandEmpty>No part make found.</CommandEmpty>
+                              <CommandGroup>
+                                {partMakes.map((make) => (
+                                  <CommandItem
+                                    key={make}
+                                    onSelect={() => {
+                                      setFormData({
+                                        ...formData,
+                                        partMake: make,
+                                      });
+                                      setPartMakeOpen(false);
+                                    }}
+                                  >
+                                    {make}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        formData.partMake === make
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="partmake">Other Part Make</Label>
+                        <Input
+                          id="partmake"
+                          type="text"
+                          placeholder="Other Part Make"
+                          value={formData.partMake}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              partMake: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="parttype">
+                          Part Type <span className="text-red-500">*</span>
+                        </Label>
+                        <Popover
+                          open={partTypeOpen}
+                          onOpenChange={setPartTypeOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              role="combobox"
+                              aria-expanded={partTypeOpen}
+                              className="w-full justify-between px-3 capitalize hover:bg-transparent"
+                            >
+                              {formData.partType || "Select part type..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search part type..."
+                                className="h-11"
+                              />
+                              <CommandEmpty>No part type found.</CommandEmpty>
+                              <CommandGroup>
+                                {partTypes.map((type) => (
+                                  <CommandItem
+                                    key={type}
+                                    onSelect={() => {
+                                      setFormData({
+                                        ...formData,
+                                        partType: type,
+                                      });
+                                      setPartTypeOpen(false);
+                                    }}
+                                  >
+                                    {type}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        formData.partType === type
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="otherparttype">Other Part Type</Label>
+                        <Input
+                          id="otherparttype"
+                          type="text"
+                          placeholder="Other Machine Make"
+                          value={formData.partType}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              partType: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="partinfo">
+                          Part Info <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="partinfo"
+                          type="text"
+                          placeholder="Other Part Info"
+                          value={formData.partInfo}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              partInfo: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="partid">Part ID</Label>
+                        <Input
+                          id="partid"
+                          type="text"
+                          placeholder="Part ID"
+                          value={formData.partId}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              partId: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <Label htmlFor="insuranceValue">
-                        Insurance Estimated Value{" "}
+                      <Label htmlFor="capacity">
+                        Capacity(in litres){" "}
                         <span className="text-red-500">*</span>
                       </Label>
                       <Input
-                        id="insuranceValue"
-                        type="number"
-                        placeholder="Insurance Estimated Value"
-                        value={formData.insuranceValue}
+                        id="capacity"
+                        type="text"
+                        placeholder="Capacity(in litres)"
+                        value={formData.capacity}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            insuranceValue: e.target.value,
+                            capacity: e.target.value,
                           })
                         }
                         className="w-full"
                       />
-                      {formData.insuranceValue && (
-                        <p className="text-sm text-gray-600">
-                          {new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "PKR",
-                          }).format(Number(formData.insuranceValue))}{" "}
-                          only
-                        </p>
-                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-charcoal" htmlFor="bicarburation">
+                        Bi-carburation
+                      </Label>
+                      <RadioGroup defaultValue="no" id="bicarburation">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="active" />
+                          <Label className="text-charcoal" htmlFor="active">
+                            Yes
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="inactive" />
+                          <Label className="text-charcoal" htmlFor="inactive">
+                            No
+                          </Label>
+                        </div>
+                      </RadioGroup>
                     </div>
                   </div>
                 </div>
@@ -510,55 +872,401 @@ const CreatePolicy = () => {
           {currentStep === 3 && (
             <div className="space-y-4">
               <h1 className="text-lg text-primary-100 font-semibold underline">
-                {steps[2]?.title}
+                {steps[2]?.description}
               </h1>
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h1 className="text-base font-medium">
-                    Motor Premium Payable
+                  <h1 className="text-base font-medium mb-3">
+                    Sample Information
                   </h1>
-                  <div className="p-4 rounded-lg border border-gray-300">
-                    <h3 className="text-lg font-semibold text-gray-700 text-center mb-2">
-                      Preview
-                    </h3>
-                    <div className="border-t border-gray-300 my-2"></div>
-
-                    {/* Table Header */}
-                    <div className="flex justify-between text-sm font-semibold text-gray-500 uppercase">
-                      <span>Name</span>
-                      <span>Premium</span>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="barcodeNo">
+                        Barcode No <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="barcodeNo"
+                        type="text"
+                        placeholder="Barcode No"
+                        value={formData.barcodeNo}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            barcodeNo: e.target.value,
+                          })
+                        }
+                        className="w-full"
+                      />
                     </div>
-                    <div className="border-t border-gray-300 my-2"></div>
 
-                    {/* Row */}
-                    <div className="flex justify-between items-center py-3">
-                      <div className="flex items-center space-x-2">
-                        {/* Icon */}
-                        <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                          {/* Replace with Shadcn Icon */}
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-5 h-5 text-gray-600"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
+                    <div className="space-y-2">
+                      <Label htmlFor="sampleDate">
+                        Sample Date <span className="text-red-500">*</span>
+                      </Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            className={cn(
+                              "w-full justify-start text-left font-normal px-3 hover:bg-transparent",
+                              !formData.sampleDate && "text-muted-foreground"
+                            )}
                           >
-                            <path d="M5 11h14V9l-4-3H9L5 9v2zm14 2H5v5h2v-2h10v2h2v-5z" />
-                          </svg>
-                        </div>
-                        <span className="text-gray-700">
-                          Motor Cycles Third Party Liability Insurance
-                        </span>
-                      </div>
-                      <span className="text-gray-800 font-medium">PKR 289</span>
+                            <CalendarIcon />
+                            {formData.sampleDate ? (
+                              format(formData.sampleDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={formData.sampleDate as Date}
+                            onSelect={(date) =>
+                              setFormData({
+                                ...formData,
+                                sampleDate: date as Date,
+                              })
+                            }
+                            className="w-full"
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </div>
-                    <div className="border-t border-gray-300 my-2"></div>
 
-                    {/* Grand Total */}
-                    <div className="flex justify-between items-center pt-2 font-semibold text-gray-800">
-                      <span>Grand Total</span>
-                      <span>PKR 289</span>
+                    <div className="space-y-2">
+                      <Label className="text-charcoal" htmlFor="intermediate">
+                        Intermediate Sample
+                      </Label>
+                      <RadioGroup defaultValue="no" id="intermediate">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="active" />
+                          <Label className="text-charcoal" htmlFor="active">
+                            Yes
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="inactive" />
+                          <Label className="text-charcoal" htmlFor="inactive">
+                            No
+                          </Label>
+                        </div>
+                      </RadioGroup>
                     </div>
+
+                    <div>
+                        <h1 className="text-base font-medium mb-3">
+                          Machine Information
+                        </h1>
+                      <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/2 space-y-2">
+                          <Label htmlFor="totalmileage">
+                            Total Mileage
+                          </Label>
+                          <Input
+                            id="totalmileage"
+                            type="number"
+                            placeholder="Total Mileage"
+                            value={formData.totalMileage}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                totalMileage: +e.target.value,
+                              })
+                            }
+                            className="w-full"
+                          />
+                        </div>
+                        <div className="w-full lg:w-1/2 space-y-2">
+                          <Label htmlFor="units">
+                            Units <span className="text-red-500">*</span>
+                          </Label>
+                          <Popover
+                            open={mileageUnitOpen}
+                            onOpenChange={setMileageUnitOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="lg"
+                                role="combobox"
+                                aria-expanded={mileageUnitOpen}
+                                className="w-full justify-between px-3 capitalize hover:bg-transparent"
+                              >
+                                {formData.mileageUnit ||
+                                  "Select mileage unit..."}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
+                              <Command>
+                                <CommandInput
+                                  placeholder="Search mileage unit..."
+                                  className="h-11"
+                                />
+                                <CommandEmpty>
+                                  No mileage unit found.
+                                </CommandEmpty>
+                                <CommandGroup>
+                                  {mileageUnits.map((units) => (
+                                    <CommandItem
+                                      key={units}
+                                      onSelect={() => {
+                                        setFormData({
+                                          ...formData,
+                                          mileageUnit: units,
+                                        });
+                                        setMileageUnitOpen(false);
+                                      }}
+                                    >
+                                      {units}
+                                      <Check
+                                        className={cn(
+                                          "ml-auto",
+                                          formData.mileageUnit === units
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="oilTime">
+                        Oil/Fluid Time <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="oilTime"
+                        type="number"
+                        placeholder="Oil / fluid time"
+                        value={formData.oilTime}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            oilTime: +e.target.value,
+                          })
+                        }
+                        className="w-full"
+                      />
+                    </div>
+
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                    <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="topup">
+                          Top up <span className="text-red-500">*</span>
+                          </Label>
+                        <Input
+                          id="topup"
+                          type="number"
+                          placeholder="Top up"
+                          value={formData.topUp}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              topUp: +e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="w-full lg:w-1/2 space-y-2">
+                        <Label htmlFor="topUpUnits">
+                          Unit <span className="text-red-500">*</span>
+                        </Label>
+                        <Popover
+                          open={topUpUnitOpen}
+                          onOpenChange={setTopUpUnitOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              role="combobox"
+                              aria-expanded={topUpUnitOpen}
+                              className="w-full justify-between px-3 capitalize hover:bg-transparent"
+                            >
+                              {formData.topUpUnit || "Select top up unit..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search top up..."
+                                className="h-11"
+                              />
+                              <CommandEmpty>
+                                No top up found.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {topUpUnits.map((topup) => (
+                                  <CommandItem
+                                    key={topup}
+                                    onSelect={() => {
+                                      setFormData({
+                                        ...formData,
+                                        topUpUnit: topup,
+                                      });
+                                      setTopUpUnitOpen(false);
+                                    }}
+                                  >
+                                    {topup}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        formData.topUpUnit === topup
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="oilName">
+                        Oil/Fluid Time <span className="text-red-500">*</span>
+                      </Label>
+                      <Popover
+                          open={oilNameOpen}
+                          onOpenChange={setOilNameOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              role="combobox"
+                              aria-expanded={oilNameOpen}
+                              className="w-full justify-between px-3 capitalize hover:bg-transparent"
+                            >
+                              {formData.oilName || "Select oil name..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full min-w-[var(--radix-popover-trigger-width)] p-0 rounded-lg shadow-md border border-gray-200 bg-white">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search oil name..."
+                                className="h-11"
+                              />
+                              <CommandEmpty>
+                                No oil name found.
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {oilNames.map((oilname) => (
+                                  <CommandItem
+                                    key={oilname}
+                                    onSelect={() => {
+                                      setFormData({
+                                        ...formData,
+                                        oilName: oilname,
+                                      });
+                                      setOilNameOpen(false);
+                                    }}
+                                  >
+                                    {oilname}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        formData.oilName === oilname
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                    </div>
+
+                    <div className="flex gap-2 lg:flex-row flex-col">
+                      <div className="w-full lg:w-1/3 space-y-2">
+                        <Label htmlFor="oil/fluidmake">Oil/Fluid Make</Label>
+                        <Input
+                          id="oil/fluidmake"
+                          type="text"
+                          placeholder="Oil / fluid make"
+                          value={formData.oilMake}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              oilMake: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="w-full lg:w-1/3 space-y-2">
+                        <Label htmlFor="oil/fluidtype">Oil/Fluid Type</Label>
+                        <Input
+                          id="oil/fluidtype"
+                          type="text"
+                          placeholder="Oil / fluid type"
+                          value={formData.oilType}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              oilType: e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="w-full lg:w-1/3 space-y-2">
+                        <Label htmlFor="oil/fluidgrade">Oil/Fluid Grade</Label>
+                        <Input
+                          id="oil/fluidgrade"
+                          type="number"
+                          placeholder="Oil / fluid grade"
+                          value={formData.oilGrade}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              oilGrade: +e.target.value,
+                            })
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    {/* <div className="space-y-2">
+                      <Label htmlFor="insuranceValue">
+                        Insurance Estimated Value{" "}
+                        <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="insuranceValue"
+                        type="number"
+                        placeholder="Insurance Estimated Value"
+                        value={formData.insuranceValue}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            insuranceValue: e.target.value,
+                          })
+                        }
+                        className="w-full"
+                      />
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -572,19 +1280,17 @@ const CreatePolicy = () => {
               </h1>
 
               <div className="space-y-2">
-                <h1 className="text-base font-medium">Payment Method</h1>
+                <h1 className="text-base font-medium">Here will be all the inserted data for review</h1>
                 <div className="space-y-6">
-                  {paymentOptions.map((option) => (
+                  {/* {paymentOptions.map((option) => (
                     <div
                       key={option.id}
                       className="flex items-start space-x-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200"
                     >
-                      {/* Icon */}
                       <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full text-2xl">
                         {option.icon}
                       </div>
 
-                      {/* Content */}
                       <div className="flex-1">
                         <h3 className="text-base font-medium text-gray-950 flex items-center">
                           {option.title}
@@ -597,7 +1303,7 @@ const CreatePolicy = () => {
                         )}
                       </div>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
               </div>
             </div>
@@ -608,7 +1314,7 @@ const CreatePolicy = () => {
               size={"lg"}
               variant={"primary"}
               onClick={handleNext}
-              disabled={currentStep === steps.length}
+              disabled={currentStep > steps.length}
             >
               {currentStep === steps.length ? "Submit" : "Next"}
             </Button>

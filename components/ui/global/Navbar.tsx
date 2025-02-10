@@ -14,8 +14,8 @@ import { NavUser } from "./NavUser";
 
 const data = {
     user: {
-        name: "outperform",
-        email: "ashir.arif@outperform",
+        name: "Faisal Ayub",
+        email: "faisal.ayub@boxygen.com",
         avatar: "/images/dashboard/avatar.jpg",
     },
 };

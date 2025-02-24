@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
 
   const publicRoutes = ["/login", "/forgot-password", "/otp"];
   const isPublicRoute = publicRoutes.includes(pathname);
-  const isPublicAsset = pathname.startsWith("/public");
+  const isPublicAsset = pathname.startsWith("/images") || pathname.startsWith("/public");
 
   console.log("Token:", token, "Pathname:", pathname);
 

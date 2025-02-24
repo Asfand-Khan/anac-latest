@@ -1,16 +1,8 @@
-"use client"
+"use client";
 
-import {
-  ChevronsUpDown,
-  LogOut,
-  Users,
-} from "lucide-react"
+import { ChevronsUpDown, LogOut, Users } from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,25 +11,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { deleteCookie } from "cookies-next";
 
 export function NavUser({
   user,
 }: {
   user: {
-    name: string
-    email: string
-    avatar: string
-  }
+    name: string;
+    email: string;
+    avatar: string;
+  };
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    deleteCookie("anac-token");
+    router.push("/login");
+  };
 
   return (
     <SidebarMenu>
@@ -85,8 +86,11 @@ export function NavUser({
                   User Profile
                 </DropdownMenuItem>
               </Link>
-              <Link href="/" legacyBehavior passHref>
-                <DropdownMenuItem className="cursor-pointer">
+              <Link href="#" legacyBehavior passHref>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={handleLogout}
+                >
                   <LogOut />
                   Log out
                 </DropdownMenuItem>
@@ -96,5 +100,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

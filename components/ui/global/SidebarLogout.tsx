@@ -8,7 +8,7 @@ const SidebarLogout = () => {
     const router = useRouter();
 
     const handleLogout = () => {
-        deleteCookie('lalascar-token');
+        deleteCookie('anac-token');
         router.push('/login');
     }
     return (

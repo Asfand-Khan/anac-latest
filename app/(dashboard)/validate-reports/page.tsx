@@ -7,8 +7,8 @@ import { Metadata } from 'next';
 import SubNav from '@/components/ui/global/SubNav'
 
 export const metadata: Metadata = {
-    title: "Orders | Jubilee General",
-    description: "Jubilee General",
+    title: "Reports | Anac Lubricants",
+    description: "Anac Total Energies Limited",
 };
 
 const page = async () => {

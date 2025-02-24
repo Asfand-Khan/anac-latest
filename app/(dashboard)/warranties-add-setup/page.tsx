@@ -5,7 +5,7 @@ import WarrantiesAddSetup from '@/components/forms/warranties-add-setup';
 
 export const metadata: Metadata = {
     title: "Warranties Setup Form | Jubilee General",
-    description: "Jubilee General",
+    description: "Anac Total Energies Limited",
 };
 
 const page = () => {

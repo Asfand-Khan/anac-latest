@@ -4,8 +4,8 @@ import React from 'react'
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: "Create Policy | Jubilee General",
-    description: "Jubilee General",
+    title: "Create Policy | Anac Lubricants",
+    description: "Anac Total Energies Limited",
 };
 
 const page = () => {

@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import Auth from '@/components/ui/auth/Auth';
 
 export const metadata: Metadata = {
-  title: "OTP | Jubilee General",
-  description: "Jubilee General",
-  metadataBase: new URL("http://localhost:3001"),
+  title: "OTP | Anac Lubricants",
+  description: "Anac Total Energies Limited",
+  // metadataBase: new URL("http://localhost:3001"),
 };
 
 const page = () => {

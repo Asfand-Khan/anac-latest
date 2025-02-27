@@ -20,6 +20,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar
 } from "@/components/ui/sidebar"
 import SidebarLogout from "./SidebarLogout"
 
@@ -153,8 +154,23 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { state, setOpen } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
+  const handleMouseEnter = () => {
+    if (isCollapsed) {
+      setOpen(true)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (!isCollapsed) {
+      setOpen(false)
+    }
+  }
+
   return (
-    <Sidebar collapsible="icon"  {...props}>
+    <Sidebar collapsible="icon" onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter}  {...props}>
       <SidebarHeader className="border-b">
         <BrandSwitcher brand={data.brand} />
       </SidebarHeader>

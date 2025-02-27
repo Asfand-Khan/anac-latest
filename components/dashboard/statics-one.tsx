@@ -119,7 +119,7 @@ const StaticsOne = () => {
     return (
         <Card className="w-full shadow-none border-0">
             <CardHeader className="border-b py-4">
-                <CardTitle className="text-lg font-semibold">Franchise Overview</CardTitle>
+                <CardTitle className="text-lg font-semibold">Sample Overview</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="pt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">

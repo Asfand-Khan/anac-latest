@@ -65,10 +65,10 @@ const page = async () => {
     const data = await getData()
     return (
         <>
-            <SubNav title="Reports To Validate" showDatePicker={true} showDataTableFilters={true} />
+            <SubNav title="Reports" showDatePicker={true} showDataTableFilters={true} />
             <Card className="w-full shadow-none border-0">
                 <CardHeader className='border-b py-4'>
-                    <CardTitle className='tracking-tight text-lg font-semibold'>Explore your Validate reports</CardTitle>
+                    <CardTitle className='tracking-tight text-lg font-semibold'>Explore your reports</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <DataTable columns={columns as ColumnDef<{ id: string; reference: string; email: string; phone: string; address: string; department: string; position: string; salary: number; hireDate: string; performance: number; projects: number; status: string; }, unknown>[]} data={data} />

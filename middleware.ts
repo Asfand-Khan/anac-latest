@@ -35,22 +35,18 @@ export function middleware(request: NextRequest) {
 
   console.log("Token:", token, "Pathname:", pathname);
 
-  // Allow public assets without token
   if (isPublicAsset) {
     return NextResponse.next();
   }
 
-  // Redirect authenticated users from public routes to home
   if (token && isPublicRoute) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Redirect unauthenticated users to login for protected routes
   if (!token && !isPublicRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Proceed with the request
   return NextResponse.next();
 }
 

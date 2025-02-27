@@ -4,14 +4,12 @@ import * as React from "react"
 import {
   BookOpenCheck,
   Boxes,
-  ChartBar,
   Flag,
   LayoutDashboard,
   Navigation,
   RectangleEllipsis,
   TestTube,
   User,
-  UserRoundCog,
 } from "lucide-react"
 
 import { NavMain } from "@/components/ui/global/NavMain"
@@ -56,7 +54,7 @@ const data = {
     },
     {
       title: "Customers",
-      url: "#",
+      url: "/customers",
       icon: User,
     },
     {
@@ -71,19 +69,19 @@ const data = {
     },
     {
       title: "Lab",
-      url: "#",
+      url: "/labs",
       icon: TestTube,
     },
-    {
-      title: "Statistics",
-      url: "/statistics",
-      icon: ChartBar,
-    },
-    {
-      title: "Support",
-      url: "/support",
-      icon: UserRoundCog,
-    },
+    // {
+    //   title: "Statistics",
+    //   url: "/statistics",
+    //   icon: ChartBar,
+    // },
+    // {
+    //   title: "Support",
+    //   url: "/support",
+    //   icon: UserRoundCog,
+    // },
     {
       title: "Report Data Fields",
       url: "#",
@@ -91,31 +89,23 @@ const data = {
       items: [
         {
           title: "Customer Reference",
-          url: "#",
+          url: "/reports-data-fields/customer-reference",
         },
         {
           title: "Machine",
-          url: "#",
+          url: "/reports-data-fields/machine",
         },
         {
           title: "Machine Make & Type",
-          url: "#",
+          url: "/reports-data-fields/machine-make-type",
         },
         {
           title: "Part",
-          url: "#",
+          url: "/reports-data-fields/part",
         },
         {
           title: "Part Make & Type",
-          url: "#",
-        },
-        {
-          title: "Sample No",
-          url: "#",
-        },
-        {
-          title: "Report Date",
-          url: "#",
+          url: "/reports-data-fields/part-make-type",
         },
       ],
     },

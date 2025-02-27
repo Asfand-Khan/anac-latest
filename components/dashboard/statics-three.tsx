@@ -56,7 +56,7 @@ const StaticsThree = () => {
         <Card className="w-full shadow-none border-0">
             {/* Card Header */}
             <CardHeader className="border-b py-4">
-                <CardTitle className="text-lg font-semibold">Franchise Overview</CardTitle>
+                <CardTitle className="text-lg font-semibold">Sample Overview</CardTitle>
             </CardHeader>
 
             {/* Card Content */}

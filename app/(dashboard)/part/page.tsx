@@ -17,39 +17,41 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Unit, UnitResponse } from "@/types/unitTypes";
-import { fetchUnits } from "@/helperFunctions.ts/unitHelperFunctions";
+import { Machine } from "@/types/machineTypes";
+import { Part, PartResponse } from "@/types/partTypes";
+import { fetchParts } from "@/helperFunctions.ts/partHelperFunctions";
 
 const page = () => {
   const router = useRouter();
-  const { data: unitsData, isLoading: unitsLoading } =
-    useQuery<UnitResponse | null>({
-      queryKey: ["unit-list"],
-      queryFn: fetchUnits,
+  const { data: partData, isLoading: partLoading } =
+    useQuery<PartResponse | null>({
+      queryKey: ["part-list"],
+      queryFn: fetchParts,
     });
 
-  if (unitsLoading) {
+  if (partLoading) {
     return <Loader />;
   }
+
   return (
     <>
       <SubNav
-        title="Units"
+        title="Part"
         showDatePicker={false}
         showDataTableFilters={false}
       />
       <Card className="w-full shadow-none border-0">
         <CardHeader className="border-b py-4">
           <CardTitle className="tracking-tight text-lg font-semibold flex justify-between items-center">
-            Explore your units
+            Explore your parts
             <div>
               <div>
                 <Button
                   variant="primary"
                   className="text-left py-1"
-                  onClick={() => router.push(`/units/add-unit`)}
+                  onClick={() => router.push(`/part/add-part`)}
                 >
-                  Add Unit
+                  Add Part
                   <Plus className="ml-1 h-4 w-4" size={20} />
                 </Button>
               </div>
@@ -61,24 +63,28 @@ const page = () => {
             columns={
               [
                 {
-                  accessorKey: "unit_name",
-                  header: "Unit Name",
+                  accessorKey: "part_kind",
+                  header: "Part Kind",
                 },
                 {
-                  accessorKey: "unit_code",
-                  header: "Unit Code",
+                  accessorKey: "part_make",
+                  header: "Part Make",
                 },
                 {
-                  accessorKey: "unit_contact",
-                  header: "Contact",
+                  accessorKey: "part_type",
+                  header: "Part Type",
                 },
                 {
-                  accessorKey: "unit_address",
-                  header: "Address",
+                  accessorKey: "capacity_in_ltrs",
+                  header: "Capacity in Ltrs",
                 },
                 {
-                  accessorKey: "unit_contact_person",
-                  header: "Contact Person",
+                  accessorKey: "part_info",
+                  header: "Part Info",
+                },
+                {
+                  accessorKey: "analysis_type",
+                  header: "Analysis Type",
                 },
                 {
                   header: "Actions",
@@ -124,9 +130,9 @@ const page = () => {
                     );
                   },
                 },
-              ] as ColumnDef<Unit>[]
+              ] as ColumnDef<Part>[]
             }
-            data={unitsData?.payload || []}
+            data={partData?.payload || []}
           />
         </CardContent>
       </Card>

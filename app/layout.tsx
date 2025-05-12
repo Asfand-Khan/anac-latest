@@ -4,6 +4,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "@/components/ui/sonner";
 import { primaryText } from "./fonts/font";
 import DynamicColors from "@/lib/DynamicColors";
+import TanstackQueryClientProvider from "@/providers/TanstachQueryProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-behavior-smooth">
       <body className={`${primaryText.className} antialiased`}>
+        <TanstackQueryClientProvider>
         <NextTopLoader
           color="#ff0000"
           showSpinner={false}
@@ -30,6 +32,7 @@ export default function RootLayout({
         <Toaster position="bottom-right" />
         <DynamicColors />
         {children}
+        </TanstackQueryClientProvider>
       </body>
     </html>
   );

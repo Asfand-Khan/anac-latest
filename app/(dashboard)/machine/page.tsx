@@ -17,39 +17,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Unit, UnitResponse } from "@/types/unitTypes";
-import { fetchUnits } from "@/helperFunctions.ts/unitHelperFunctions";
+import { Machine, MachineResponse } from "@/types/machineTypes";
+import { fetchMachines } from "@/helperFunctions.ts/machineHelperFunctions";
 
 const page = () => {
   const router = useRouter();
-  const { data: unitsData, isLoading: unitsLoading } =
-    useQuery<UnitResponse | null>({
-      queryKey: ["unit-list"],
-      queryFn: fetchUnits,
+  const { data: machineData, isLoading: machineLoading } =
+    useQuery<MachineResponse | null>({
+      queryKey: ["machine-list"],
+      queryFn: fetchMachines,
     });
 
-  if (unitsLoading) {
+  if (machineLoading) {
     return <Loader />;
   }
   return (
     <>
       <SubNav
-        title="Units"
+        title="Machines"
         showDatePicker={false}
         showDataTableFilters={false}
       />
       <Card className="w-full shadow-none border-0">
         <CardHeader className="border-b py-4">
           <CardTitle className="tracking-tight text-lg font-semibold flex justify-between items-center">
-            Explore your units
+            Explore your machines
             <div>
               <div>
                 <Button
                   variant="primary"
                   className="text-left py-1"
-                  onClick={() => router.push(`/units/add-unit`)}
+                  onClick={() => router.push(`/machine/add-machine`)}
                 >
-                  Add Unit
+                  Add Machine
                   <Plus className="ml-1 h-4 w-4" size={20} />
                 </Button>
               </div>
@@ -61,24 +61,28 @@ const page = () => {
             columns={
               [
                 {
-                  accessorKey: "unit_name",
+                  accessorKey: "machine_kind",
+                  header: "Machine Kind",
+                },
+                {
+                  accessorKey: "machine_make",
+                  header: "Machine Make",
+                },
+                {
+                  accessorKey: "machine_type",
+                  header: "Machine Type",
+                },
+                {
+                  accessorKey: "machine_info1",
+                  header: "Info 1",
+                },
+                {
+                  accessorKey: "machine_info2",
+                  header: "Info 2",
+                },
+                {
+                  accessorKey: "unit.unit_name",
                   header: "Unit Name",
-                },
-                {
-                  accessorKey: "unit_code",
-                  header: "Unit Code",
-                },
-                {
-                  accessorKey: "unit_contact",
-                  header: "Contact",
-                },
-                {
-                  accessorKey: "unit_address",
-                  header: "Address",
-                },
-                {
-                  accessorKey: "unit_contact_person",
-                  header: "Contact Person",
                 },
                 {
                   header: "Actions",
@@ -124,9 +128,9 @@ const page = () => {
                     );
                   },
                 },
-              ] as ColumnDef<Unit>[]
+              ] as ColumnDef<Machine>[]
             }
-            data={unitsData?.payload || []}
+            data={machineData?.payload || []}
           />
         </CardContent>
       </Card>

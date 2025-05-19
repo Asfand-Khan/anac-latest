@@ -17,11 +17,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Machine } from "@/types/machineTypes";
 import { Part, PartResponse } from "@/types/partTypes";
 import { fetchParts } from "@/helperFunctions.ts/partHelperFunctions";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const { data: partData, isLoading: partLoading } =
     useQuery<PartResponse | null>({
@@ -140,4 +139,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

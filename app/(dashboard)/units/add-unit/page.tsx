@@ -13,19 +13,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { LoaderIcon } from "lucide-react";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import Select from "react-select";
 
-const page = () => {
+const Page = () => {
   const { data: customerData, isLoading: customerLoading } =
     useQuery<CustomerResponse | null>({
       queryKey: ["unit-customer-list"],
       queryFn: fetchCustomers,
     });
 
-  let customerOptions = useMemo(() => {
+  const customerOptions = useMemo(() => {
     return customerData
       ? customerData.payload.map((customer) => ({
           label: customer.customer_name,
@@ -234,4 +234,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -5,9 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Loader from "@/components/ui/global/Loader";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Unit, unitSchema } from "@/features/unitFeatures";
 import { fetchCustomers } from "@/helperFunctions.ts/customerHelperFunctions";
-import { Customer, CustomerResponse } from "@/types/customerTypes";
+import { CustomerResponse } from "@/types/customerTypes";
 import axiosFunction, { axiosReturnType } from "@/utils/axiosFunction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -21,7 +20,7 @@ import { machineSchema, Machine } from "@/features/machineFeatures";
 import { UnitResponse } from "@/types/unitTypes";
 import { fetchUnits } from "@/helperFunctions.ts/unitHelperFunctions";
 
-const page = () => {
+const Page = () => {
   const { data: customerData, isLoading: customerLoading } =
     useQuery<CustomerResponse | null>({
       queryKey: ["machine-customer-list"],
@@ -34,7 +33,7 @@ const page = () => {
       queryFn: fetchUnits,
     });
 
-  let customerOptions = useMemo(() => {
+  const customerOptions = useMemo(() => {
     return customerData
       ? customerData.payload.map((customer) => ({
           label: customer.customer_name,
@@ -43,7 +42,7 @@ const page = () => {
       : [];
   }, [customerData]);
 
-  let unitOptions = useMemo(() => {
+  const unitOptions = useMemo(() => {
     return unitData
       ? unitData.payload.map((unit) => ({
           label: unit.unit_name,
@@ -458,4 +457,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

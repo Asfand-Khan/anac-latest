@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const { data: customersData, isLoading: customersLoading } =
     useQuery<CustomerResponse | null>({
@@ -103,7 +103,7 @@ const page = () => {
 
                             <DropdownMenuItem
                               onClick={() => {
-                                console.log("Edit clicked...");
+                                console.log("Edit clicked...", record);
                               }}
                             >
                               <Edit className="mr-2 h-4 w-4" />
@@ -113,7 +113,7 @@ const page = () => {
                             <DropdownMenuItem
                               onSelect={(e) => {
                                 e.preventDefault();
-                                console.log("delete clicked...");
+                                console.log("delete clicked...", record);
                               }}
                             >
                               <Trash className="mr-2 h-4 w-4" />
@@ -135,4 +135,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

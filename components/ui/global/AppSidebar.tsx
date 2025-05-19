@@ -5,12 +5,8 @@ import {
   AppWindowMac,
   BookOpenCheck,
   Boxes,
-  Flag,
   LayoutDashboard,
-  Navigation,
   Puzzle,
-  RectangleEllipsis,
-  TestTube,
   User,
 } from "lucide-react";
 

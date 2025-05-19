@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { Unit, UnitResponse } from "@/types/unitTypes";
 import { fetchUnits } from "@/helperFunctions.ts/unitHelperFunctions";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const { data: unitsData, isLoading: unitsLoading } =
     useQuery<UnitResponse | null>({
@@ -134,4 +134,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

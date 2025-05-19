@@ -16,7 +16,6 @@ import { toast } from "sonner";
 import Select from "react-select";
 import { MachineResponse } from "@/types/machineTypes";
 import { fetchMachines } from "@/helperFunctions.ts/machineHelperFunctions";
-import { Part, partSchema } from "@/features/partFeatures";
 import { PartResponse } from "@/types/partTypes";
 import { fetchParts } from "@/helperFunctions.ts/partHelperFunctions";
 import { Sample, sampleSchema } from "@/features/sampleFeatures";
@@ -29,7 +28,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 
-const page = () => {
+const Page = () => {
   const { data: machineData, isLoading: machineLoading } =
     useQuery<MachineResponse | null>({
       queryKey: ["sample-machine-list"],
@@ -42,7 +41,7 @@ const page = () => {
       queryFn: fetchParts,
     });
 
-  let machineOptions = useMemo(() => {
+  const machineOptions = useMemo(() => {
     return machineData
       ? machineData.payload.map((machine) => ({
           label: machine.machine_make + " - " + machine.machine_type,
@@ -51,7 +50,7 @@ const page = () => {
       : [];
   }, [machineData]);
 
-  let partOptions = useMemo(() => {
+  const partOptions = useMemo(() => {
     return partData
       ? partData.payload.map((part) => ({
           label: part.id + " - " + part.analysis_type,
@@ -584,4 +583,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

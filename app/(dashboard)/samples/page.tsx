@@ -23,7 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const { data: sampleData, isLoading: sampleLoading } =
     useQuery<SampleResponse | null>({
@@ -186,4 +186,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

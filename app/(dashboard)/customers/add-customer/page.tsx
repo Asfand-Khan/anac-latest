@@ -14,7 +14,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const page = () => {
+const Page = () => {
   const {
     register,
     handleSubmit,
@@ -182,4 +182,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

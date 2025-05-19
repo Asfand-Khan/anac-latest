@@ -18,14 +18,14 @@ import { MachineResponse } from "@/types/machineTypes";
 import { fetchMachines } from "@/helperFunctions.ts/machineHelperFunctions";
 import { Part, partSchema } from "@/features/partFeatures";
 
-const page = () => {
+const Page = () => {
   const { data: machineData, isLoading: machineLoading } =
     useQuery<MachineResponse | null>({
       queryKey: ["part-machine-list"],
       queryFn: fetchMachines,
     });
 
-  let machineOptions = useMemo(() => {
+  const machineOptions = useMemo(() => {
     return machineData
       ? machineData.payload.map((machine) => ({
           label: machine.machine_make + " - " + machine.machine_type,
@@ -483,4 +483,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

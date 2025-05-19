@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { Machine, MachineResponse } from "@/types/machineTypes";
 import { fetchMachines } from "@/helperFunctions.ts/machineHelperFunctions";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const { data: machineData, isLoading: machineLoading } =
     useQuery<MachineResponse | null>({
@@ -138,4 +138,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

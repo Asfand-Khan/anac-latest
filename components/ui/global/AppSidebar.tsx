@@ -7,6 +7,7 @@ import {
   Boxes,
   LayoutDashboard,
   Puzzle,
+  Upload,
   User,
 } from "lucide-react";
 
@@ -51,25 +52,31 @@ const data = {
       icon: Boxes,
     },
     {
-      title: "Samples",
-      url: "/samples",
-      icon: BookOpenCheck,
-    },
-    {
       title: "Machine",
       url: "/machine",
       icon: AppWindowMac,
     },
-    // {
-    //   title: "Machine Make & Type",
-    //   url: "/reports-data-fields/machine-make-type",
-    //   icon: BookOpenCheck,
-    // },
     {
       title: "Part",
       url: "/part",
       icon: Puzzle,
     },
+    {
+      title: "Samples",
+      url: "/samples",
+      icon: BookOpenCheck,
+    },
+    {
+      title: "Uploads",
+      url: "/uploads",
+      icon: Upload,
+    },
+
+    // {
+    //   title: "Machine Make & Type",
+    //   url: "/reports-data-fields/machine-make-type",
+    //   icon: BookOpenCheck,
+    // },
     // {
     //   title: "Part Make & Type",
     //   url: "/reports-data-fields/part-make-type",

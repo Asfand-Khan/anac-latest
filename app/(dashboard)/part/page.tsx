@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
+import { Edit, Eye, MoreHorizontal, Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Part, PartResponse } from "@/types/partTypes";
 import { fetchParts } from "@/helperFunctions.ts/partHelperFunctions";
@@ -122,6 +122,16 @@ const Page = () => {
                             >
                               <Trash className="mr-2 h-4 w-4" />
                               Delete
+                            </DropdownMenuItem>
+                            <hr className="my-2" />
+                            <DropdownMenuItem
+                              onClick={() => {
+                                console.log("View Sample clicked...", record);
+                                router.push(`/part/${record.id}`);
+                              }}
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Sample
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>

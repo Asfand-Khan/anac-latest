@@ -29,7 +29,7 @@ export default function RootLayout({
           speed={200}
           easing="ease"
         />
-        <Toaster position="bottom-right" />
+        <Toaster position="bottom-right" richColors />
         <DynamicColors />
         {children}
         </TanstackQueryClientProvider>

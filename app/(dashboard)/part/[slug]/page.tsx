@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const page = () => {
+const Page = () => {
   const params = useParams();
   const slug = params.slug as string;
 
@@ -115,4 +115,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

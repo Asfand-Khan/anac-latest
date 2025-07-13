@@ -11,7 +11,7 @@ import Papa from "papaparse";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
-const page = () => {
+const Page = () => {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -97,4 +97,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
